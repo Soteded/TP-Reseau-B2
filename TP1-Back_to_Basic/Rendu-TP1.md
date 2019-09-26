@@ -26,7 +26,7 @@
     ```
 
 * Déterminer si les cartes réseau ont récupéré une IP en DHCP :
-  * enp0s3 (à internet) : Oui comme le montre le fichier                `internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease` dans le dossier `/var/lib/NetworkManager/`      avec la commande ci-suivant :
+  * enp0s3 (à internet) : Oui comme le montre le fichier `internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease` dans le dossier `/var/lib/NetworkManager/` avec la commande ci-suivant :
     ```
     [sote@localhost ~]$ sudo cat /var/lib/NetworkManager/     internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease
     *This is private data. Do not parse.*
@@ -42,12 +42,15 @@
     DOMAINNAME=auvence.co
     CLIENTID=010800272e1ba3
     ```
-  * enp0s8 (SSH) : L'IP de cette carte réseau est fixe car on peut constater qu'il n'y a pas de bail DHCP via : ```[sote@localhost ~]$ nmcli con show enp0s8 | grep "dhcp"
-            ipv4.dhcp-client-id:                    --
-            ipv4.dhcp-timeout:                      0 (default)
-            ipv4.dhcp-send-hostname:                yes
-            ipv4.dhcp-hostname:                     --
-            ipv4.dhcp-fqdn:                         --
-            ipv6.dhcp-duid:                         --
-            ipv6.dhcp-send-hostname:                yes
-            ipv6.dhcp-hostname:                     --```
+  * enp0s8 (SSH) : L'IP de cette carte réseau est fixe car on peut constater qu'il n'y a pas de bail DHCP via :
+        ```
+        [sote@localhost ~]$ nmcli con show enp0s8 | grep "dhcp"
+        ipv4.dhcp-client-id:                    --
+        ipv4.dhcp-timeout:                      0 (default)
+        ipv4.dhcp-send-hostname:                yes
+        ipv4.dhcp-hostname:                     --
+        ipv4.dhcp-fqdn:                         --
+        ipv6.dhcp-duid:                         --
+        ipv6.dhcp-send-hostname:                yes
+        ipv6.dhcp-hostname:                     --
+        ```
