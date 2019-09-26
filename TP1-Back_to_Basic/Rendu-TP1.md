@@ -26,7 +26,9 @@
     ```
 
 * Déterminer si les cartes réseau ont récupéré une IP en DHCP :
-  * enp0s3 (à internet) : Oui comme le montre le fichier                `internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease` dans le dossier `/var/lib/NetworkManager/`      avec la commande ci-suivant : ```[sote@localhost ~]$ sudo cat /var/lib/NetworkManager/     internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease
+  * enp0s3 (à internet) : Oui comme le montre le fichier                `internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease` dans le dossier `/var/lib/NetworkManager/`      avec la commande ci-suivant :
+    ```
+    [sote@localhost ~]$ sudo cat /var/lib/NetworkManager/     internal-8c885912-ab77-4838-8846-6a7d444dcb84-enp0s3.lease
     *This is private data. Do not parse.*
     ADDRESS=10.0.2.15
     NETMASK=255.255.255.0
