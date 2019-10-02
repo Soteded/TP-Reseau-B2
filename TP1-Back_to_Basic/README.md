@@ -381,3 +381,79 @@ SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de l
 |----------|:----------:|:----------:|:----------:|
 |Réseau 1 (`10.1.1.0/24`) | `10.1.1.1` | X | `10.1.1.2` |
 |Réseau 2 (`10.1.2.0/24`) | X | `10.1.2.1` | `10.1.2.2` |
+
+* Configuration de VM1 et VM2 :
+
+    Configuration uniquement de la carte réseau utilisée dans notre typologie :
+    * VM1 :
+        ```
+        [sote@localhost ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+        NAME="enp0s3"
+        DEVICE="enp0s3"
+        
+        ONBOOT="yes"
+        BOOTPROTO="static"
+        
+        IPADDR=10.1.1.1
+        NETMASK=255.255.255.0
+        
+        GATEWAY=10.1.1.2
+        ```
+
+    * VM2 :
+        ```
+        [sote@localhost ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+        NAME="enp0s3"
+        DEVICE="enp0s3"
+        
+        ONBOOT="yes"
+        BOOTPROTO="static"
+        
+        IPADDR=10.1.2.1
+        NETMASK=255.255.255.0
+        
+        GATEWAY=10.1.2.2
+        ```
+
+* Configuration du routeur :
+
+    * Interface Ethernet 0/1 (Réseau 1) :
+        ```
+        R1#show run int e0/1
+        Building configuration...
+        Current configuration : 77 bytes
+        !
+        interface Ethernet0/1
+          ip address 10.1.1.2 255.255.255.0
+          half-duplex
+        end
+        ```
+
+    * Interface Ethernet 0/2 (Réseau 2) :
+        ```
+        R1#show run int e0/2
+        Building configuration...
+        Current configuration : 77 bytes
+        !
+        interface Ethernet0/1
+          ip address 10.1.2.2 255.255.255.0
+          half-duplex
+        end
+        ```
+
+    * Interface Ethernet 0/0 (Internet) :
+
+* Preuve que les VM passent par le routeur pour joindre internet :
+
+    ```
+    ```
+
+## IV.Autres Applications et métrologie
+
+### 1.Commandes
+
+`iftop` est un outil permettant de voir la consommation de bande passante en temps réel des applications qui fonctionnent sur notre machine. Cela peut s'avérer utile afin de controller la consommation / une utilisation de bande passante anormale.
+
+### 2.Cockpit
+
+    
