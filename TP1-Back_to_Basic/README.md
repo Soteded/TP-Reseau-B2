@@ -378,6 +378,6 @@ SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de l
 * Tableau des adresses IP :
 
 |  | PC1 | PC2 | Routeur|
-|----------|*----------*|*----------*|*----------*|
+|----------|:----------:|:----------:|:----------:|
 |Réseau 1 (`10.1.1.0/24`) | `10.1.1.1` | X | `10.1.1.2` |
 |Réseau 2 (`10.1.2.0/24`) | X | `10.1.2.1` | `10.1.2.2` |
