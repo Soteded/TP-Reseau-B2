@@ -216,4 +216,126 @@
 
 ### 1.Configuraton cartes réseau
 
+* Modifier la configuration de la carte réseau privée
 
+    Nous avons la carte `enp0s8` avec la configuration ci suivante :
+        ```
+        [sote@localhost ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s8ipts/ifcfg-enp0s8
+        NAME=enp0s8
+        DEVICE=enp0s8
+        
+        ONBOOT=yes
+        BOOTPROTO=static
+        
+        IPADDR=192.168.140.2
+        NETMASK=255.255.255.0
+        ```
+
+    Qui nous affiche avec `ip a` :
+        ```
+        [sote@localhost ~]$ sudo ip a | grep enp0s8
+        3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP groupe
+        default qlen 1000
+        inet 192.168.140.2/24 brd 192.168.140.255 scope global noprefixroute enp0s8
+        ```
+
+    Nous modifions (avec `vi`) le fichier de configuration `ifcfg-enp0s8` afin de donner à la carte `enp0s8` l'adresse `192.168.140.3` :
+
+        ```
+        [sote@localhost ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s8ipts/ifcfg-enp0s8
+        NAME=enp0s8
+        DEVICE=enp0s8
+        
+        ONBOOT=yes
+        BOOTPROTO=static
+        
+        IPADDR=192.168.140.3
+        NETMASK=255.255.255.0
+        ```
+
+    Puis nous redémarrons NetworkManger avec la commande `sudo nmcli c reload` puis nous redémarrons l'interface avec `sudo nmcli con up enp0s8` :
+    
+        ```
+        [sote@localhost ~]$ sudo nmcli con up enp0s8
+        Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/3)
+        ```
+
+    Puis nous vérifions que les changements ont été pris en compte avec à nouveau `ip a` :
+        
+        ```
+        [sote@localhost ~]$ sudo ip a | grep enp0s8
+        3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP groupe
+        default qlen 1000
+        inet 192.168.140.3/24 brd 192.168.140.255 scope global noprefixroute enp0s8
+        ```
+
+* Créer une nouvelle carte réseau :
+    Définir une IP statique pour cette nouvelle carte :
+        Modification du fichier (toujours avec `vi`) :
+
+            ```
+            [sote@localhost ~]$ sudo cat /etc/sysconfig/network-scripts/ifcfg-enp0s9
+            NAME=enp0s9
+            DEVICE=enp0s9
+            
+            ONBOOT=yes
+            BOOTPROTO=static
+            
+            IPADDR=192.168.165.2
+            NETMASK=255.255.255.0
+            ```
+
+        Redémarrage de NetworkManager et la carte `enp0s9` avec `sudo nmcli c reload` :
+
+            ```
+            [sote@localhost ~]$ sudo nmcli c reload
+            [sote@localhost ~]$ sudo nmcli con up enp0s9
+            Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/8)
+            ```
+
+* Vérifiez vos changements :
+    Affichez les nouvelles cartes/IP :
+        ```
+        [sote@localhost ~]$ ip a
+        1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+            link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+            inet 127.0.0.1/8 scope host lo
+                valid_lft forever preferred_lft forever
+            inet6 ::1/128 scope host
+                valid_lft forever preferred_lft forever
+        2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+            link/ether 08:00:27:2e:1b:a3 brd ff:ff:ff:ff:ff:ff
+            inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+                valid_lft 85880sec preferred_lft 85880sec
+            inet6 fe80::f9ba:9cc:b82f:350e/64 scope link noprefixroute
+                valid_lft forever preferred_lft forever
+        3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+            link/ether 08:00:27:6b:9b:e4 brd ff:ff:ff:ff:ff:ff
+            inet 192.168.140.3/24 brd 192.168.140.255 scope global noprefixroute enp0s8
+                valid_lft forever preferred_lft forever
+            inet6 fe80::a00:27ff:fe6b:9be4/64 scope link
+                valid_lft forever preferred_lft forever
+        4: enp0s9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+            link/ether 08:00:27:bc:59:a8 brd ff:ff:ff:ff:ff:ff
+            inet 192.168.165.2/24 brd 192.168.165.255 scope global noprefixroute enp0s9
+                valid_lft forever preferred_lft forever
+            inet6 fe80::a00:27ff:febc:59a8/64 scope link
+                valid_lft forever preferred_lft forever
+        ```
+
+    Afficher les nouvelles tables ARP/de routage :
+
+        ```
+        [sote@localhost ~]$ ip route
+        default via 10.0.2.2 dev enp0s3 proto dhcp metric 100
+        10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.15 metric 100
+        192.168.140.0/24 dev enp0s8 proto kernel scope link src 192.168.140.3 metric 101
+        192.168.165.0/24 dev enp0s9 proto kernel scope link src 192.168.165.2 metric 102
+        ```
+
+        On peut voir qu'une ligne concernant enp0s9 et sa configuration est apparue !
+
+### 2.Serveur SSH
+
+* Modifier la configuration du système pour que le serveur SSH tourne sur le port 2222 :
+    Afin de modifier le port par lequel le serveur SSH tourne, il suffit d'accéder au fichier de configuration situé dans `/etc/ssh/sshd_config` et de modifier la ligne avec marqué `# Port 22` de base en : `Port 2222`, puis on le redémarre avec `restart sshd.service`
