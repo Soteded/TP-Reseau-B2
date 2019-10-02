@@ -338,4 +338,6 @@
 ### 2.Serveur SSH
 
 * Modifier la configuration du système pour que le serveur SSH tourne sur le port 2222 :
-    Afin de modifier le port par lequel le serveur SSH tourne, il suffit d'accéder au fichier de configuration situé dans `/etc/ssh/sshd_config` et de modifier la ligne avec marqué `# Port 22` de base en : `Port 2222`, puis on le redémarre avec `restart sshd.service`
+    Afin de modifier le port par lequel le serveur SSH tourne, il suffit d'accéder au fichier de configuration situé dans `/etc/ssh/sshd_config` et de modifier la ligne avec marqué `# Port 22` de base en : `Port 2222`, puis on le redémarre avec `restart sshd.service`.
+
+    Pour adapter la configuration, on 
