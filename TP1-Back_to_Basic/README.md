@@ -369,7 +369,7 @@
 
 Sur l'image ci-dessus nous appercevons l'échange entre le serveur SSH et notre client pour la première fois. On peut y voir au début la première étape du "3-way Handshake" qui est le premier "SYNchronized" envoyé par le client au serveur. On observe aussi après qu'il y a le remplissage des tables ARP du client et du serveur avec l'échange de l'adresse MAC de l'un à l'autre. On appercoit ensuite la deuxième partie du Handshake (SYNchronized - ACKnowledge),puis le premier paquet envoyé à la suite est le dernier ACKnowledge du client.
 
-    ![Trame](images/trame.PNG)
+![Trame](images/trame.PNG)
 
 SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de la capture de Wireshark, qui a été envoyée par `192.168.140.1` (notre client) et reçue par `192.168.140.3` (notre server) en TCP, du port 13012 du client au port 2222 du serveur. La longueur de la trame est de 87 bytes. La trame contien un Push (PSH) ainsi qu'un acquitement (ACK), et la taille calculée de la trame est de 2102272 et la taille de la charge utile (PayLoad, ici Len) est de 33 bytes.
 
