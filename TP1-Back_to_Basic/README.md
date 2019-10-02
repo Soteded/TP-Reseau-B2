@@ -339,6 +339,30 @@
 ### 2.Serveur SSH
 
 * Modifier la configuration du système pour que le serveur SSH tourne sur le port 2222 :
-    Afin de modifier le port par lequel le serveur SSH tourne, il suffit d'accéder au fichier de configuration situé dans `/etc/ssh/sshd_config` et de modifier la ligne avec marqué `# Port 22` de base en : `Port 2222`, puis on le redémarre avec `restart sshd.service`.
+    Afin de modifier le port par lequel le serveur SSH tourne, il suffit d'accéder au fichier de configuration situé dans `/etc/ssh/sshd_config` et de modifier la ligne avec marqué `# Port 22` de base en : `Port 2222`, puis on le redémarre avec `systemctl restart sshd.service`.
 
-    Pour adapter la configuration, on 
+    Pour adapter la configuration, on ouvre un port (ici le `2222`) sur le firewall `sudo firewall-cmd --add-port=2222/tcp --permanent`, on retire l'ancien port SSH `sudo firewall-cmd --remove-port=22/tcp --permanent`, puis on relance le firewall avec `sudo firewall-cmd --reload` et finalement on relance le service SSH `sudo systemctl restart sshd.service` puis on vérifie qu'il fonctionne bien, et avec le bon port :
+
+    ```
+    [sudo] password for sote:
+    ● sshd.service - OpenSSH server daemon
+    Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+    Active: active (running) since Wed 2019-10-02 15:21:52 CEST; 5min ago
+        Docs: man:sshd(8)
+            man:sshd_config(5)
+    Main PID: 9270 (sshd)
+        Tasks: 1 (limit: 11514)
+        Memory: 1.4M
+        CGroup: /system.slice/sshd.service
+                └─9270 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256>
+    
+    Oct 02 15:21:52 localhost.localdomain systemd[1]: Stopped OpenSSH server daemon.
+    Oct 02 15:21:52 localhost.localdomain systemd[1]: Starting OpenSSH server daemon...
+    Oct 02 15:21:52 localhost.localdomain sshd[9270]: Server listening on 0.0.0.0 port 2222.
+    Oct 02 15:21:52 localhost.localdomain sshd[9270]: Server listening on :: port 2222.
+    Oct 02 15:21:52 localhost.localdomain systemd[1]: Started OpenSSH server daemon.
+    ```
+
+* Analyser les trames de connexion au serveur SSH :
+
+    [Etablissement de la connexion](Capture.png)
