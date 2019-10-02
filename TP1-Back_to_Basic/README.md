@@ -371,6 +371,8 @@ Sur l'image ci-dessus nous appercevons l'échange entre le serveur SSH et notre 
 
     ![Trame](trame.PNG)
 
+SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de la capture de Wireshark, qui a été envoyée par `192.168.140.1` (notre client) et reçue par `192.168.140.3` (notre server) en TCP, du port 13012 du client au port 2222 du serveur. La longueur de la trame est de 87 bytes. La trame contien un Push (PSH) ainsi qu'un acquitement (ACK), et la taille calculée de la trame est de 2102272 et la taille de la charge utile (PayLoad, ici Len) est de 33 bytes.
+
 ## III.Routage simple
 
 
