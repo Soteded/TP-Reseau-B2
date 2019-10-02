@@ -366,3 +366,11 @@
 * Analyser les trames de connexion au serveur SSH :
 
     ![Etablissement de la connexion](Capture.PNG)
+
+Sur l'image ci-dessus nous appercevons l'échange entre le serveur SSH et notre client pour la première fois. On peut y voir au début la première étape du "3-way Handshake" qui est le premier "SYNchronized" envoyé par le client au serveur. On observe aussi après qu'il y a le remplissage des tables ARP du client et du serveur avec l'échange de l'adresse MAC de l'un à l'autre. On appercoit ensuite la deuxième partie du Handshake (SYNchronized - ACKnowledge),puis le premier paquet envoyé à la suite est le dernier ACKnowledge du client.
+
+    ![Trame](trame.PNG)
+
+## III.Routage simple
+
+
