@@ -456,4 +456,4 @@ SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de l
 
 ### 2.Cockpit
 
-    
+Cockpit est un service installé de base sur Centos 8, qui permet d'avoir une interface graphique web-friendly afin de gèrer son système Centos.
