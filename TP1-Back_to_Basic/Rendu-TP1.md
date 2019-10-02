@@ -202,11 +202,18 @@
             ```
 
         Aucun port TCP/UDP n'est ouvert/filtré :
-        ```
-        [sote@ ~]$sudo firewall-cmd --list-ports
+            ```
+            [sote@ ~]$sudo firewall-cmd --list-ports
 
-        [sote@ ~]$echo $?
-        0
-        ```
+            [sote@ ~]$echo $?
+            0
+            ```
+
+        Afficher les "vraies" rêgles firewall avec nftables :
+            Pour voir la config clique [ici](nftables_config.md) (trop long pour être mis la :()
+
+## II.Edit Configuration
+
+### 1.Configuraton cartes réseau
 
 
