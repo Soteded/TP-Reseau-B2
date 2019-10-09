@@ -480,8 +480,62 @@ On peut voir sur l'image ci-dessus les requêtes `ping` de notre VM transmises a
 
 ### 1.Commandes
 
-`iftop` est un outil permettant de voir la consommation de bande passante en temps réel des applications qui fonctionnent sur notre machine. Cela peut s'avérer utile afin de controller la consommation / une utilisation de bande passante anormale.
+`iftop` est un outil permettant de voir la consommation de bande passante en temps réel des applications qui fonctionnent sur notre machine. Cela peut s'avérer utile afin de détecter une consommation de bande passante anormale.
 
 ### 2.Cockpit
 
-Cockpit est un service installé de base sur Centos 8, qui permet d'avoir une interface graphique web-friendly afin de gèrer son système Centos.
+Cockpit est un service proposant une interface graphique en ligne de gestion de notre machine.
+
+* Port d'écoute de `Cockpit` est `9090` :
+
+    ```
+    [sote@localhost ~]$ ss -tuln
+    Netid       State         Recv-Q        Send-Q                Local Address:Port                Peer Address:Port
+    tcp         LISTEN        0             128                         0.0.0.0:22                       0.0.0.0:*
+    tcp         LISTEN        0             64                        127.0.0.1:45105                    0.0.0.0:*
+    tcp         LISTEN        0             128                            [::]:22                          [::]:*
+    tcp         LISTEN        0             128                               *:9090                           *:*
+    ```
+
+* Le port de fonctionnement de Cockpit est bien ouvert :
+
+    ```
+    [sote@localhost ~]$ sudo firewall-cmd --list-services
+    cockpit dhcpv6-client ssh
+    ```
+
+Plus spécifiquement dans le réseau, Cockpit nous sert à voir via des graphiques / tableaux le flux entrant sortant de chacune de nos cartes réseaux, ainsi que d'allumer/éteindre ces dernières. Ils nous permet aussi d'accèder aux logs de NetworkManager.
+
+### 3.NetData
+
+* Mettre en place NetData sur la VM1 et la VM2 :
+
+    On installe NetData sur CentOs8 avec la commande `bash <(curl -Ss https://my-netdata.io/kickstart-static64.sh)` (Doc officielle : `https://www.netdata.cloud/`).
+
+    NetData écoute sur le port `19999` :
+
+    ```
+    [sote@localhost ~]$ ss -tul
+    Netid      State        Recv-Q        Send-Q                Local Address:Port                  Peer Address:Port
+    udp        UNCONN       0             0                         127.0.0.1:8125                       0.0.0.0:*
+    udp        UNCONN       0             0                             [::1]:8125                          [::]:*
+    tcp        LISTEN       0             128                         0.0.0.0:ssh                        0.0.0.0:*
+    tcp        LISTEN       0             128                       127.0.0.1:8125                       0.0.0.0:*
+    tcp        LISTEN       0             128                         0.0.0.0:dnp-sec                    0.0.0.0:*
+    tcp        LISTEN       0             64                        127.0.0.1:45105                      0.0.0.0:*
+    tcp        LISTEN       0             128                            [::]:ssh                           [::]:*
+    tcp        LISTEN       0             128                           [::1]:8125                          [::]:*
+    tcp        LISTEN       0             128                            [::]:dnp-sec                       [::]:*
+    tcp        LISTEN       0             128                               *:websm                            *:*
+    ```
+
+    On ouvre donc le port 19999 :
+    
+    ```
+    [sote@localhost ~]$ sudo firewall-cmd --add-port=19999/tcp --permanent
+    success
+    ```
+
+![NetData Network](/images/Capture.PNG)
+
+It works ! On peut voire les paquets reçus et envoyés par chacune de nos cartes réseaux.
