@@ -416,16 +416,33 @@ SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de l
         ```
 
 * Configuration du routeur :
+    * Interface Ethernet 0/0 (Connexion NAT) :
+        ```
+        R1#show run int e0/0
+        Building configuration...
+
+        Current configuration : 98 bytes
+        !
+        interface Ethernet0/0
+        ip address dhcp
+        ip nat outside
+        ip virtual-reassembly
+        half-duplex
+        end
+        ```
 
     * Interface Ethernet 0/1 (Réseau 1) :
         ```
         R1#show run int e0/1
         Building configuration...
-        Current configuration : 77 bytes
+
+        Current configuration : 115 bytes
         !
         interface Ethernet0/1
-          ip address 10.1.1.2 255.255.255.0
-          half-duplex
+        ip address 10.1.1.2 255.255.255.0
+        ip nat inside
+        ip virtual-reassembly
+        half-duplex
         end
         ```
 
@@ -433,20 +450,31 @@ SUr l'image de la trame ci dessus, on peut voir qu'il s'agit de la trame 14 de l
         ```
         R1#show run int e0/2
         Building configuration...
-        Current configuration : 77 bytes
+
+        Current configuration : 115 bytes
         !
-        interface Ethernet0/1
-          ip address 10.1.2.2 255.255.255.0
-          half-duplex
+        interface Ethernet0/2
+        ip address 10.1.2.2 255.255.255.0
+        ip nat inside
+        ip virtual-reassembly
+        half-duplex
         end
         ```
 
-    * Interface Ethernet 0/0 (Internet) :
-
-* Preuve que les VM passent par le routeur pour joindre internet :
-
+* Preuve que VM1 passe par le routeur pour joindre Internet :
     ```
+    [sote@localhost ~]$ traceroute google.com
+    traceroute to google.com (216.58.209.238), 30 hops max, 60 byte packets
+      1  _gateway (10.1.1.2)  10.502 ms  10.392 ms  10.302 ms
+      2  192.168.122.1 (192.168.122.1)  21.557 ms  21.536 ms  21.434 ms
+      3  10.0.3.2 (10.0.3.2)  21.333 ms  21.244 ms  21.156 ms
     ```
+
+* Preuve de notre routage :
+
+![Routage](/images/ping1-nat.PNG)
+
+On peut voir sur l'image ci-dessus les requêtes `ping` de notre VM transmises au routeur qui les transmets au NAT qui les envoies sur Internet.
 
 ## IV.Autres Applications et métrologie
 
