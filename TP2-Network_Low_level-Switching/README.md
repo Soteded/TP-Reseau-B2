@@ -34,9 +34,14 @@ PC2> ping 10.2.1.1
 
 On peut voir ci-dessus que le protocole utilisé par `ping` est le protocole `ICMP` (Internet Control Message Protocol).
 
-L'échange ARP (en jaune) est composé de l'`ARP Request`, ainsi que de deux `ARP Reply`
+L'échange ARP (en jaune) est composé de l'`ARP Request`, ainsi que de deux `ARP Reply`.
+
+Le switch n'a pas besoin d'adresse IP car il sert juste de relais aux informations qui lui sont envoyées.
+Par ailleurs, l'adresse IP des machines sert à les identifier dans un réseau.
 
 ## II
+
+
 
 ## III
 
