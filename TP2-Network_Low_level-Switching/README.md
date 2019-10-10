@@ -171,7 +171,7 @@ Alors que sur cette capture (entre le Switch `SW2-3` et `SW2-1`) on peut voir le
 
 * Schéma trajet ARP quand `VPC2-3` ping `VPC2-2` et la réponse :
 
-Étape 1 : Requête ARP :
+Étape 1 : Requête ARP (Broadcast) :
 
 ![Requête ARP](images/requeteArp.PNG)
 
@@ -186,6 +186,8 @@ Alors que sur cette capture (entre le Switch `SW2-3` et `SW2-1`) on peut voir le
 Étape 4 : Réponse Pong :
 
 ![Réponse Pong](images/reponseArp.PNG)
+
+* Reconfigurer STP :
 
 ## III
 
