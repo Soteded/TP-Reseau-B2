@@ -536,6 +536,6 @@ Plus spécifiquement dans le réseau, Cockpit nous sert à voir via des graphiqu
     success
     ```
 
-![NetData Network](/images/Capture.PNG)
+![NetData Network](/images/netdata.PNG)
 
 It works ! On peut voire les paquets reçus et envoyés par chacune de nos cartes réseaux.
