@@ -149,7 +149,7 @@ Le port désactivé de ce switch est donc le port `Ethernet0/2` (`e0/2`).
 
 * El schéma :
 
-![2e infra](images/infra2.png)
+![2e infra](images/infra2.PNG)
 
 |  | SW2-1 | SW2-2 | SW2-3 |
 |----------|:----------:|:----------:|:----------:|
