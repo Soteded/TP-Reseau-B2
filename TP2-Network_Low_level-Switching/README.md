@@ -154,8 +154,8 @@ Le port désactivé de ce switch est donc le port `Ethernet0/2` (`e0/2`).
 |  | SW2-1 | SW2-2 | SW2-3 |
 |----------|:----------:|:----------:|:----------:|
 | Rôle | `Root Bridge` | Switch | Switch |
-| Root Port | X | e0/1 | e0/1 |
-| Port désactivé | X |  |  |
+| Root Port | X | `e0/1` | `e0/1` |
+| Port désactivé | X | `e0/3` | `e0/2` |
 
 ## III
 
