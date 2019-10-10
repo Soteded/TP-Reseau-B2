@@ -98,7 +98,7 @@ Total Mac Addresses for this criterion: 5
 
 * Trames CDP :
 
-![Trame CDP](/images/cdpSwitchs.PNG)
+![Trame CDP](images/cdpSwitchs.PNG)
 
 On peut voir ci-dessus (en plein millieu) la trame CDP. Il s'agit du Cisco Discovery Protocol (CDP) qui est un protocole de découverte de réseau de niveau 2 OSI qui permet de découvrir les autres périphériques directement connectés.
 
@@ -159,9 +159,33 @@ Le port désactivé de ce switch est donc le port `Ethernet0/2` (`e0/2`).
 
 * Confirmer les informations STP :
 
-![SW2-3 & SW2-2](/images/ping3-2route.PNG)
+![SW2-3 & SW2-2](images/ping3-2route.PNG)
 
-![SW2-3 & SW2-1](/images/ping3-2routeTrue.PNG)
+On peut voir ci-dessus (entre le Switch `SW2-3` et `SW2-2`) qu'il est uniquement émis la requête ARP de notre VPC `VPC2-3`.
+
+![SW2-3 & SW2-1](images/ping3-2routeTrue.PNG)
+
+Alors que sur cette capture (entre le Switch `SW2-3` et `SW2-1`) on peut voir les requêtes ARP émises en Broadcast par le VPC `VPC2-3`, ainsi que les différentes trames `ping` et `pong` échangées entre `VPC2-3` et `VPC2-2`.
+
+* On peut donc déterminer que le lien qui a été désactivé par STP est celui entre le Switch `SW2-3` et `SW2-2`.
+
+* Schéma trajet ARP quand `VPC2-3` ping `VPC2-2` et la réponse :
+
+Étape 1 : Requête ARP :
+
+![Requête ARP](images/requeteArp.PNG)
+
+Étape 2 : Réponse ARP :
+
+![Réponse ARP](images/reponseArp.PNG)
+
+Étape 3 : Requête Ping :
+
+![Requête Ping](images/requetePing.PNG)
+
+Étape 4 : Réponse Pong :
+
+![Réponse Pong](images/reponseArp.PNG)
 
 ## III
 
