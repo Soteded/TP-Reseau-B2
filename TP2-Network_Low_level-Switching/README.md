@@ -157,6 +157,12 @@ Le port désactivé de ce switch est donc le port `Ethernet0/2` (`e0/2`).
 | Root Port | X | `e0/1` | `e0/1` |
 | Port désactivé | X | X | `e0/2` |
 
+* Confirmer les informations STP :
+
+![SW2-3 & SW2-2](/images/ping3-2route.PNG)
+
+![SW2-3 & SW2-1](/images/ping3-2routeTrue.PNG)
+
 ## III
 
 ## IV
