@@ -198,11 +198,13 @@ SW2-2#show spanning-tree br
 Vlan                         Bridge ID              Time  Age  Dly  Protocol
 ---------------- --------------------------------- -----  ---  ---  --------
 VLAN0001         28673 (28672,   1) aabb.cc00.0300    2    20   15  rstp
-SW2-2#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
+```
+
+```
 SW2-2(config)#spanning-tree vlan 1 priority 16384
-SW2-2(config)#exit
-*Oct 15 14:44:54.078: %SYS-5-CONFIG_I: Configured from console by console
+```
+
+```
 SW2-2#show spanning-tree br
 
                                                    Hello  Max  Fwd
@@ -261,6 +263,106 @@ Topologie à mettre en place :
 
 ![Infrastructure 3 v2](images/infra3-2.PNG)
 
-On met en place les VLANs pour les interfaces Switch/VPCs comme vu précédemment, MAIS entre les deux switchs, on entre en mode config `conf t` sur l'interface voulue `int e0/0` puis on passe cette interface en mode trunk `switchport mode trunk` et on défini l'encapsulation entre ces deux switchs avec la commande `switchport trunk encapsulation dot1q`. Finallement, on autorise les deux VLANs 10 et 20 sur le port avec `switchport trunk allowed vlan 10,20`.
+On met en place les VLANs pour les interfaces Switch/VPCs comme vu précédemment, MAIS entre les deux switchs, on entre en mode config `conf t` sur l'interface voulue `int e0/0` puis on passe cette interface en mode trunk `switchport mode trunk` et on défini l'encapsulation entre ces deux switchs avec la commande `switchport trunk encapsulation dot1q`. Finallement, on autorise les deux VLANs 10 et 20 sur le port avec `switchport trunk allowed vlan 10,20`, et ca sur les deux switchs.
+
+`PC1` et `PC3` peuvent se ping entre eux :
+
+```
+PC3-1> ping 10.2.10.2
+84 bytes from 10.2.10.2 icmp_seq=1 ttl=64 time=0.672 ms
+84 bytes from 10.2.10.2 icmp_seq=2 ttl=64 time=0.382 ms
+84 bytes from 10.2.10.2 icmp_seq=3 ttl=64 time=0.417 ms
+84 bytes from 10.2.10.2 icmp_seq=4 ttl=64 time=0.485 ms
+84 bytes from 10.2.10.2 icmp_seq=5 ttl=64 time=0.625 ms
+```
+
+```
+PC3-3> ping 10.2.10.1
+84 bytes from 10.2.10.1 icmp_seq=1 ttl=64 time=0.674 ms
+84 bytes from 10.2.10.1 icmp_seq=2 ttl=64 time=0.315 ms
+84 bytes from 10.2.10.1 icmp_seq=3 ttl=64 time=0.398 ms
+84 bytes from 10.2.10.1 icmp_seq=4 ttl=64 time=0.327 ms
+84 bytes from 10.2.10.1 icmp_seq=5 ttl=64 time=0.436 ms
+```
+
+Mais ne peuvent pas ping `PC2` et `PC4` :
+
+```
+PC3-1> ping 10.2.20.1
+No gateway found
+```
+
+```
+PC3-1> ping 10.2.20.2
+No gateway found
+```
+
+```
+PC3-3> ping 10.2.20.1
+No gateway found
+```
+
+```
+PC3-3> ping 10.2.20.1
+No gateway found
+```
+
+Qui, quant à eux, peuvent se ping :
+
+```
+PC3-2> ping 10.2.20.2
+84 bytes from 10.2.20.2 icmp_seq=1 ttl=64 time=0.538 ms
+84 bytes from 10.2.20.2 icmp_seq=2 ttl=64 time=0.408 ms
+84 bytes from 10.2.20.2 icmp_seq=3 ttl=64 time=0.509 ms
+84 bytes from 10.2.20.2 icmp_seq=4 ttl=64 time=0.412 ms
+84 bytes from 10.2.20.2 icmp_seq=5 ttl=64 time=0.493 ms
+```
+
+```
+PC3-4> ping 10.2.20.1
+84 bytes from 10.2.20.1 icmp_seq=1 ttl=64 time=0.637 ms
+84 bytes from 10.2.20.1 icmp_seq=2 ttl=64 time=0.440 ms
+84 bytes from 10.2.20.1 icmp_seq=3 ttl=64 time=0.524 ms
+84 bytes from 10.2.20.1 icmp_seq=4 ttl=64 time=0.430 ms
+84 bytes from 10.2.20.1 icmp_seq=5 ttl=64 time=0.547 ms
+```
+
+![Aaaand boom](images/vlanprooved.PNG)
+
+Comme capturé ci-dessus entre les deux switchs lors d'un `ping` entre `PC1` et `PC3`, on peut voir à la ligne 3 `Virtual LAN` et son ID, ici : `ID : 10`.
 
 ## IV
+
+Topologie du lab précédent :o
+
+* Configuration du LACP entre `SW1` et `SW2` :
+
+On sélectionne la plage d'interfaces :
+
+`interface range fastEthernet 0/1 - 1`
+
+On créée le groupe Ethernet Channel n°1 avec le mode actif du LACP :
+
+`channel-group 1 mode active`
+
+On configure l'interface port-channel :
+
+`interface port-channel 1`
+
+And boom :
+
+```
+SW3-1#show lacp neigh
+Flags:  S - Device is requesting Slow LACPDUs
+        F - Device is requesting Fast LACPDUs
+        A - Device is in Active mode       P - Device is in Passive mode
+
+Channel group 1 neighbors
+
+Partner's information:
+
+                  LACP port                        Admin  Oper   Port    Port
+Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
+Et0/0     SA      32768     aabb.cc80.0600  20s    0x0    0x1    0x1     0x3D
+Et0/1     SP      0         0000.0000.0000 7523s    0x0    0x0    0x0     0x0
+```
