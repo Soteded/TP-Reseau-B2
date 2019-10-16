@@ -189,6 +189,70 @@ Alors que sur cette capture (entre le Switch `SW2-3` et `SW2-1`) on peut voir le
 
 * Reconfigurer STP :
 
-## III
+On change la priorité du switch `SW2-2` :
+
+```
+SW2-2#show spanning-tree br
+
+                                                   Hello  Max  Fwd
+Vlan                         Bridge ID              Time  Age  Dly  Protocol
+---------------- --------------------------------- -----  ---  ---  --------
+VLAN0001         28673 (28672,   1) aabb.cc00.0300    2    20   15  rstp
+SW2-2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW2-2(config)#spanning-tree vlan 1 priority 16384
+SW2-2(config)#exit
+*Oct 15 14:44:54.078: %SYS-5-CONFIG_I: Configured from console by console
+SW2-2#show spanning-tree br
+
+                                                   Hello  Max  Fwd
+Vlan                         Bridge ID              Time  Age  Dly  Protocol
+---------------- --------------------------------- -----  ---  ---  --------
+VLAN0001         16385 (16384,   1) aabb.cc00.0300    2    20   15  rstp
+```
+
+Echanges après une reconfiguration STP :
+
+![Echanges post reconfiguration](images/dtp.PNG)
+
+## III - Isolation :
+
+### 1. Simple
+
+![Infrastructure 3 v1](images/infra3-1.PNG)
+
+Pour mettre un VLAN en place, on le passe en mode `config` sur le switch avec `conf t`, on créée le VLAN avec `vlan xx` (xx pour le numéro de VLAN), puis une fois sur la configuration du vlan (`config-vlan`) on le renomme `name client-network`. Pour attribuer une interface à un VLAN, on se connecte à l'interface (dans `config` `int e0/1`) puis on active le filtrage `switchport mode access` afin de définir le VLAN autorisé `switchport access vlan 10`.
+
+`PC2` ne communique qu'avec `PC3` :
+
+```
+PC3-2> ping 10.2.3.3
+84 bytes from 10.2.3.3 icmp_seq=1 ttl=64 time=0.174 ms
+84 bytes from 10.2.3.3 icmp_seq=2 ttl=64 time=0.282 ms
+84 bytes from 10.2.3.3 icmp_seq=3 ttl=64 time=0.262 ms
+84 bytes from 10.2.3.3 icmp_seq=4 ttl=64 time=0.310 ms
+84 bytes from 10.2.3.3 icmp_seq=5 ttl=64 time=0.272 ms
+```
+
+```
+PC3-3> ping 10.2.3.2
+84 bytes from 10.2.3.2 icmp_seq=1 ttl=64 time=0.579 ms
+84 bytes from 10.2.3.2 icmp_seq=2 ttl=64 time=0.259 ms
+84 bytes from 10.2.3.2 icmp_seq=3 ttl=64 time=0.270 ms
+84 bytes from 10.2.3.2 icmp_seq=4 ttl=64 time=0.349 ms
+84 bytes from 10.2.3.2 icmp_seq=5 ttl=64 time=0.260 ms
+```
+
+Et `PC1` est **Solo** :
+
+```
+PC3-1> ping 10.2.3.2
+host (10.2.3.2) not reachable
+```
+
+```
+PC3-1> ping 10.2.3.3
+host (10.2.3.3) not reachable
+```
 
 ## IV
