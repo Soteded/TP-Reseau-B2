@@ -39,9 +39,9 @@ L'échange ARP (en jaune) est composé de l'`ARP Request`, ainsi que de deux `AR
 Le switch n'a pas besoin d'adresse IP car il sert juste de relais aux informations qui lui sont envoyées.
 Par ailleurs, l'adresse IP des machines sert à les identifier dans un réseau.
 
-## II
+## II - More Switches
 
-* Mise en place de la topologie ci-dessus :
+* Mise en place de la topologie ci-dessous :
 
 ![2e infra](images/infra2.png)
 
@@ -254,5 +254,13 @@ host (10.2.3.2) not reachable
 PC3-1> ping 10.2.3.3
 host (10.2.3.3) not reachable
 ```
+
+### 2. Avec trunk
+
+Topologie à mettre en place :
+
+![Infrastructure 3 v2](images/infra3-2.PNG)
+
+On met en place les VLANs pour les interfaces Switch/VPCs comme vu précédemment, MAIS entre les deux switchs, on entre en mode config `conf t` sur l'interface voulue `int e0/0` puis on passe cette interface en mode trunk `switchport mode trunk` et on défini l'encapsulation entre ces deux switchs avec la commande `switchport trunk encapsulation dot1q`. Finallement, on autorise les deux VLANs 10 et 20 sur le port avec `switchport trunk allowed vlan 10,20`.
 
 ## IV
