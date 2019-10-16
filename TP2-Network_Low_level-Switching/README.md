@@ -43,7 +43,7 @@ Par ailleurs, l'adresse IP des machines sert à les identifier dans un réseau.
 
 * Mise en place de la topologie ci-dessous :
 
-![2e infra](images/infra2.png)
+![2e infra](images/infra2.PNG)
 
 * Faire communiquer les 3 PCs :
 
