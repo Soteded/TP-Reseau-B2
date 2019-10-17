@@ -15,4 +15,8 @@ On configure les addresse IP sur chaque VPCs avec `ip 10.3.x0.x/24` (`x` à remp
 | P1 | 40 | X | X | X | `10.3.40.1/24` |
 | R1 | X | `10.3.10.254/24` | `10.3.20.254/24` | `10.3.30.254/24` | `10.3.40.254/24` |
 
+Pour configurer les différentes adresses IP sur `R1`, on se rend sur le mode configuration du routeur (`conf t`), on set l'interface que l'on va découper en `no shutdown`. Ensuite, on créée/configure chacune des sous-interfaces de l'interface préalablement choisie, ici e0/0, avec `int e0/0.10`, et on applique l'encapsulation `dot1q` pour le VLAN 10 (`encapsulation dot1q 10`) et finalement, on set l'adresse IP de l'interface avec la commande classico-classique : `ip address 10.3.10.254 255.255.255.0`.
+
+Same shit pour les autres VLANs mais avec des adresse adaptées, hein !
+
 ## II - Cas Concret
