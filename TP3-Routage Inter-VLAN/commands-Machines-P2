@@ -1,0 +1,360 @@
+ROUTEUR :
+
+conf t
+int e0/0
+no shutdown
+exit
+int e0/0.10
+encapsulation dot1q 10
+ip address 10.3.10.5 255.255.255.248
+exit
+int e0/0.20
+encapsulation dot1q 20
+ip address 10.3.20.29 255.255.255.224
+exit
+int e0/0.30
+encapsulation dot1q 30
+ip address 10.3.30.13 255.255.255.240
+exit
+int e0/0.40
+encapsulation dot1q 40
+ip address 10.3.40.13 255.255.255.240
+exit
+int e0/0.50
+encapsulation dot1q 50
+ip address 10.3.50.5 255.255.255.248
+exit
+int e0/0.60
+encapsulation dot1q 60
+ip address 10.3.60.13 255.255.255.240
+exit
+exit
+wr
+
+
+REGLES ACL (ROUTEUR) [SEULEMENT MM VLAN] :
+
+conf t
+access-list 110 permit ip 10.3.10.0 0.0.0.7 any
+int e0/0.10
+ip access-group 110 in
+access-list 120 permit ip 10.3.20.0 0.0.0.31 any
+int e0/0.20
+ip access-group 120 in
+access-list 130 permit ip 10.3.30.0 0.0.0.15 any
+int e0/0.30
+ip access-group 130 in
+access-list 140 permit ip 10.3.40.0 0.0.0.15 any
+int e0/0.40
+ip access-group 140 in
+access-list 150 permit ip 10.3.50.0 0.0.0.7 any
+int e0/0.50
+ip access-group 150 in
+access-list 160 permit ip 10.3.60.0 0.0.0.15 any
+int e0/0.60
+ip access-group 160 in
+exit
+exit
+
+
+REGLES ACL (ROUTEUR) [FINAL]:
+
+conf t
+ip access-list extended denyVlan10
+deny ip 10.3.20.0 0.0.0.31 any
+deny ip 10.3.30.0 0.0.0.15 any
+permit ip any any
+exit
+ip access-list extended denyVlan20
+deny ip 10.3.10.0 0.0.0.7 any
+deny ip 10.3.30.0 0.0.0.15 any
+deny ip 10.3.50.0 0.0.0.7 any
+permit ip any any
+exit
+ip access-list extended denyVlan30
+deny ip 10.3.10.0 0.0.0.7 any
+deny ip 10.3.20.0 0.0.0.31 any
+deny ip 10.3.40.0 0.0.0.15 any
+deny ip 10.3.50.0 0.0.0.7 any
+permit ip any any
+exit
+ip access-list extended denyVlan40
+deny ip 10.3.30.0 0.0.0.15 any
+deny ip 10.3.50.0 0.0.0.7 any
+permit ip any any
+exit
+ip access-list extended denyVlan50
+deny ip 10.3.20.0 0.0.0.31 any
+deny ip 10.3.30.0 0.0.0.15 any
+deny ip 10.3.40.0 0.0.0.15 any
+deny ip 10.3.60.0 0.0.0.15 any
+permit ip any any
+exit
+ip access-list extended denyVlan60
+deny ip 10.3.50.0 0.0.0.7 any
+permit ip any any
+exit
+int e0/0.10
+ip access-group denyVlan10 out
+exit
+int e0/0.20
+ip access-group denyVlan20 out
+exit
+int e0/0.30
+ip access-group denyVlan30 out
+exit
+int e0/0.40
+ip access-group denyVlan40 out
+exit
+int e0/0.50
+ip access-group denyVlan50 out
+exit
+int e0/0.60
+ip access-group denyVlan60 out
+exit
+exit
+
+
+wr
+
+conf t
+no ip access-list extended denyVlan10
+no ip access-list extended denyVlan20
+no ip access-list extended denyVlan30
+no ip access-list extended denyVlan40
+no ip access-list extended denyVlan50
+no ip access-list extended denyVlan60
+exit
+
+
+MACHINES :
+
+ip 10.3.60.1/28 10.3.60.13
+save
+
+
+SWITCHS :
+
+conf t
+vlan 10
+name admins-vlan
+exit
+vlan 20
+name users-vlan
+exit
+vlan 30
+name stags-vlan
+exit
+vlan 40
+name servers-vlan
+exit
+vlan 50
+name servss-vlan
+exit
+vlan 60
+name printers-vlan
+exit
+interface Ethernet 0/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 0/1
+switchport mode access
+switchport access vlan 10
+exit
+interface Ethernet 0/2
+switchport mode access
+switchport access vlan 60
+exit
+interface Ethernet 0/3
+switchport mode access
+switchport access vlan 60
+exit
+interface Ethernet 1/0
+switchport mode access
+switchport access vlan 30
+exit
+interface Ethernet 1/1
+switchport mode access
+switchport access vlan 30
+exit
+interface Ethernet 1/2
+switchport mode access
+switchport access vlan 30
+exit
+interface Ethernet 1/3
+switchport mode access
+switchport access vlan 30
+exit
+interface Ethernet 2/0
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 2/1
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 2/2
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 2/3
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 3/0
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 3/1
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 3/2
+switchport mode access
+switchport access vlan 20
+exit
+interface Ethernet 3/3
+switchport mode access
+switchport access vlan 20
+exit
+exit
+wr
+
+
+SWITCH [SERVEURS SENSIBLES] :
+
+conf t
+vlan 10
+name admins-vlan
+exit
+vlan 20
+name users-vlan
+exit
+vlan 30
+name stags-vlan
+exit
+vlan 40
+name servers-vlan
+exit
+vlan 50
+name servss-vlan
+exit
+vlan 60
+name printers-vlan
+exit
+interface Ethernet 0/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 0/1
+switchport mode access
+switchport access vlan 50
+exit
+interface Ethernet 0/2
+switchport mode access
+switchport access vlan 50
+exit
+interface Ethernet 1/0
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 1/1
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 1/2
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 1/3
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 2/0
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 2/1
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 2/2
+switchport mode access
+switchport access vlan 40
+exit
+interface Ethernet 2/3
+switchport mode access
+switchport access vlan 40
+exit
+exit
+wr
+
+
+SWITCH CENTRAL :
+
+conf t
+vlan 10
+name admins-vlan
+exit
+vlan 20
+name users-vlan
+exit
+vlan 30
+name stags-vlan
+exit
+vlan 40
+name servers-vlan
+exit
+vlan 50
+name servss-vlan
+exit
+vlan 60
+name printers-vlan
+exit
+interface Ethernet 0/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 0/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 0/2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 0/3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 1/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+interface Ethernet 1/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30,40,50,60
+exit
+exit
+wr
+
+
+REGLES ACL (SWITCH) :
+
+conf t
+access-list 161 permit ip any host 10.3.20.1
+int range e0/2-3
+ip access-group 161 in
+exit
+exit
+
+
